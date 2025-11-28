@@ -3,8 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plan Estratégico 2026 | Gerencia de Planeación</title>
+    <meta name="description" content="Plan Estratégico 2026 - Gerencia de Planeación y Contratación - Objetivos estratégicos y roadmap de iniciativas prioritarias">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
@@ -25,7 +26,13 @@
 
         * {
             box-sizing: border-box;
-            outline: none;
+        }
+
+        /* Focus styles for keyboard users */
+        button:focus, a:focus, input:focus, textarea:focus, select:focus, .dot:focus, .toc-link:focus {
+            outline: 3px solid var(--primary);
+            outline-offset: 3px;
+            box-shadow: none;
         }
 
         body,
@@ -417,6 +424,10 @@
             background: rgba(0, 0, 0, 0.2);
             cursor: pointer;
             transition: all 0.3s;
+            border: none;
+            padding: 0;
+            -webkit-appearance: none;
+            appearance: none;
         }
 
         .dot.active {
@@ -470,12 +481,49 @@
             color: var(--secondary);
         }
 
+        .toc-link {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            background: transparent;
+            border: none;
+            padding: 15px 0;
+            font-size: 1rem;
+            color: inherit;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .toc-link:hover {
+            color: var(--primary);
+            padding-left: 10px;
+        }
+
+        /* Screen-reader-only */
+        .sr-only {
+            position: absolute !important;
+            width: 1px !important;
+            height: 1px !important;
+            padding: 0 !important;
+            margin: -1px !important;
+            overflow: hidden !important;
+            clip: rect(0, 0, 0, 0) !important;
+            white-space: nowrap !important;
+            border: 0 !important;
+        }
+
         .close-toc {
             position: absolute;
             top: 30px;
             right: 40px;
             font-size: 2rem;
             cursor: pointer;
+            background: transparent;
+            border: none;
+            color: var(--dark);
+            padding: 0 6px;
+            line-height: 1;
         }
 
         /* --- Mobile Rotate Overlay --- */
@@ -624,22 +672,22 @@
 
     <header>
         <div class="brand-logo">Gerencia <span>Planeación</span> 2026</div>
-        <button class="btn-menu" onclick="toggleTOC()">Índice</button>
+        <button class="btn-menu" onclick="toggleTOC()" aria-controls="tocOverlay" aria-expanded="false">Índice</button>
         <div class="progress-container">
-            <div class="progress-bar" id="progressBar"></div>
+            <div class="progress-bar" id="progressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
         </div>
     </header>
 
-    <div class="toc-overlay" id="tocOverlay">
-        <div class="close-toc" onclick="toggleTOC()">×</div>
+    <div class="toc-overlay" id="tocOverlay" role="dialog" aria-modal="true" aria-label="Índice de contenidos" aria-hidden="true">
+        <button class="close-toc" onclick="toggleTOC()" aria-label="Cerrar índice">×</button>
         <ul class="toc-list" id="tocList">
         </ul>
     </div>
 
     <main id="mainContainer">
-        <section class="active" id="section-0">
+        <section class="active" id="section-0" role="region" aria-label="Inicio" aria-roledescription="diapositiva">
             <div class="cover-content">
-                <span style="font-size: 4rem; display: block; margin-bottom: 20px;">🚀</span>
+                <span style="font-size: 4rem; display: block; margin-bottom: 20px;" aria-hidden="true">🚀</span>
                 <h1>Objetivos Estratégicos 2026</h1>
                 <p class="subtitle">Presentación Ejecutiva Interactiva<br>Gerencia de Planeación y Contratación</p>
                 <button class="btn-start" onclick="scrollToIndex(1)">Iniciar Presentación</button>
@@ -648,11 +696,11 @@
 
     </main>
 
-    <div class="nav-controls">
-        <button class="nav-btn" onclick="prevSlide()">❮</button>
-        <button class="nav-btn" onclick="nextSlide()">❯</button>
+    <div class="nav-controls" role="navigation" aria-label="Navegación de la presentación">
+        <button class="nav-btn" onclick="prevSlide()" aria-label="Anterior">❮</button>
+        <button class="nav-btn" onclick="nextSlide()" aria-label="Siguiente">❯</button>
     </div>
-    <div class="nav-dots" id="dotsContainer"></div>
+    <div class="nav-dots" id="dotsContainer" role="navigation" aria-label="Navegación por diapositivas"></div>
 
     <script>
         // --- DATOS ---
@@ -809,6 +857,9 @@
             // Crear Sección HTML
             const section = document.createElement('section');
             section.id = `section-${realIndex}`;
+            section.setAttribute('role', 'region');
+            section.setAttribute('aria-roledescription', 'diapositiva');
+            section.setAttribute('aria-label', `${obj.id}. ${obj.title}`);
             section.innerHTML = `
                 <div class="grid-container">
                     <div class="content-card">
@@ -836,7 +887,8 @@
                         </div>
 
                         <div class="chart-container">
-                            <canvas id="chart-${realIndex}"></canvas>
+                            <canvas id="chart-${realIndex}" role="img" aria-labelledby="chart-desc-${realIndex}"></canvas>
+                            <p class="sr-only" id="chart-desc-${realIndex}">${obj.indicador} - ${obj.kpiValue} ${obj.kpiLabel}</p>
                         </div>
                         
                         <div class="kpi-row">
@@ -860,12 +912,14 @@
         const finalIndex = objectives.length + 1;
         const finalSection = document.createElement('section');
         finalSection.id = `section-${finalIndex}`;
+        finalSection.setAttribute('role', 'region');
+        finalSection.setAttribute('aria-label', 'Cierre');
         finalSection.innerHTML = `
             <div class="final-content">
                 <div class="quote"><span>"</span>La planeación no es solo pensar en el futuro,<br> es el futuro que construimos hoy.<span>"</span></div>
                 <h2 style="color:var(--primary)">Gracias</h2>
                 <p style="color:var(--text-muted)">Gerencia de Planeación y Contratación 2026</p>
-                <button class="btn-menu" onclick="scrollToIndex(0)" style="margin-top:20px;">Volver al Inicio</button>
+                <button class="btn-menu" onclick="scrollToIndex(0)" style="margin-top:20px;" aria-label="Volver al inicio">Volver al Inicio</button>
             </div>
         `;
         main.appendChild(finalSection);
@@ -873,17 +927,24 @@
 
 
         function generateNavElement(index, title) {
-            // TOC
+            // TOC (using a button for accessibility)
             const li = document.createElement('li');
             li.className = 'toc-item';
-            li.innerHTML = `${title} <span>Go</span>`;
-            li.onclick = () => { scrollToIndex(index); toggleTOC(); };
+            const btn = document.createElement('button');
+            btn.className = 'toc-link';
+            btn.type = 'button';
+            btn.innerHTML = `${title} <span>Go</span>`;
+            btn.addEventListener('click', () => { scrollToIndex(index); toggleTOC(); });
+            li.appendChild(btn);
             tocList.appendChild(li);
 
-            // Dot
-            const dot = document.createElement('div');
+            // Dot (converted to button for keyboard navigation)
+            const dot = document.createElement('button');
             dot.className = `dot ${index === 0 ? 'active' : ''}`;
-            dot.onclick = () => scrollToIndex(index);
+            dot.type = 'button';
+            dot.setAttribute('aria-label', `Ir a ${title}`);
+            dot.setAttribute('title', title);
+            dot.addEventListener('click', () => scrollToIndex(index));
             dotsContainer.appendChild(dot);
         }
 
@@ -916,19 +977,26 @@
 
         function updateUI(index) {
             // Dots
-            dots.forEach(d => d.classList.remove('active'));
-            if (dots[index]) dots[index].classList.add('active');
+            dots.forEach((d, i) => {
+                d.classList.remove('active');
+                d.setAttribute('aria-current', 'false');
+                if (i === index) {
+                    d.classList.add('active');
+                    d.setAttribute('aria-current', 'true');
+                }
+            });
 
             // Progress Bar
             const percent = (index / (sections.length - 1)) * 100;
             progressBar.style.width = `${percent}%`;
+            progressBar.setAttribute('aria-valuenow', Math.round(percent));
         }
 
         function scrollToIndex(index) {
             const target = document.getElementById(`section-${index}`);
             if (target) {
-                // Scroll interno del main
-                target.scrollIntoView({ behavior: 'smooth' });
+                // Scroll inside the main container so the overlay/scroll-snap works reliably
+                main.scrollTo({ top: target.offsetTop, behavior: 'smooth' });
             }
         }
 
@@ -936,7 +1004,20 @@
         function prevSlide() { if (currentIndex > 0) scrollToIndex(currentIndex - 1); }
 
         function toggleTOC() {
-            document.getElementById('tocOverlay').classList.toggle('open');
+            const overlay = document.getElementById('tocOverlay');
+            overlay.classList.toggle('open');
+            const expanded = overlay.classList.contains('open');
+            document.querySelectorAll('.btn-menu[aria-controls="tocOverlay"]').forEach(btn => btn.setAttribute('aria-expanded', expanded));
+            overlay.setAttribute('aria-hidden', !expanded);
+            if (expanded) {
+                // When opened, set focus to the first link in the TOC for keyboard users
+                const first = overlay.querySelector('.toc-link');
+                if (first) first.focus();
+            } else {
+                // Return focus to the toggle button
+                const toggles = document.querySelectorAll('.btn-menu[aria-controls="tocOverlay"]');
+                if (toggles && toggles.length) toggles[0].focus();
+            }
         }
 
         // --- MOTOR DE GRÁFICOS Y ANIMACIONES ---
