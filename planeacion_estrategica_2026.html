@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Plan Estratégico 2026 | Gerencia de Planeación</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- CONFIGURACIÓN Y VARIABLES --- */
+        :root {
+            --primary: #00A9E0;
+            /* Azul Viva 1a */
+            --secondary: #8DC63F;
+            /* Verde Viva 1a */
+            --dark: #12202B;
+            --text-muted: #5f6c7b;
+            --bg-light: #f8fbfe;
+            --white-glass: rgba(255, 255, 255, 0.95);
+            --shadow-card: 0 10px 40px -10px rgba(0, 60, 90, 0.15);
+            --gradient-brand: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        * {
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--dark);
+            height: 100%;
+            overflow: hidden;
+            /* Controlado por el contenedor snap */
+        }
+
+        /* --- FONDO ANIMADO SUTIL --- */
+        .ambient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at 10% 10%, rgba(0, 169, 224, 0.05), transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(141, 198, 63, 0.05), transparent 40%);
+            z-index: -1;
+        }
+
+        /* --- SCROLL SNAP CONTAINER --- */
+        main {
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+            position: relative;
+        }
+
+        section {
+            height: 100vh;
+            width: 100%;
+            scroll-snap-align: start;
+            position: relative;
+            padding: 80px 5% 40px 5%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+            /* Permite scroll interno si el contenido es muy largo */
+        }
+
+        /* --- HEADER FIJO --- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .brand-logo {
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: var(--dark);
+            letter-spacing: -0.5px;
+        }
+
+        .brand-logo span {
+            color: var(--primary);
+        }
+
+        .progress-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--gradient-brand);
+            width: 0%;
+            transition: width 0.5s;
+        }
+
+        .btn-menu {
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid #eee;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .btn-menu:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* --- PORTADA (COVER) --- */
+        .cover-content {
+            text-align: center;
+            max-width: 800px;
+            position: relative;
+            z-index: 2;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, #0077a3 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        .btn-start {
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            background: var(--gradient-brand);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0, 169, 224, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-start:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0, 169, 224, 0.4);
+        }
+
+        /* --- DISEÑO DE OBJETIVOS (GRID) --- */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 40px;
+            max-width: 1300px;
+            width: 100%;
+            margin: auto;
+            opacity: 0;
+            transform: translateY(30px);
+            /* Estado inicial para animación */
+            transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        section.active .grid-container {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Columna Izquierda: Texto */
+        .content-card {
+            background: transparent;
+            padding-right: 20px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 15px;
+            background: rgba(0, 169, 224, 0.1);
+            color: var(--primary);
+        }
+
+        .content-card h2 {
+            font-size: 2.2rem;
+            margin: 0 0 15px 0;
+            color: var(--dark);
+            line-height: 1.1;
+        }
+
+        .iniciativa {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-bottom: 25px;
+            border-left: 4px solid var(--secondary);
+            padding-left: 15px;
+        }
+
+        .details-box {
+            margin-top: 25px;
+        }
+
+        .details-box h4 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        .details-box p {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+
+        .activities-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .activities-list li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            color: #444;
+        }
+
+        .activities-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.2rem;
+            line-height: 1rem;
+        }
+
+        /* Columna Derecha: Dashboard */
+        .dashboard-card {
+            background: var(--white-glass);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-card);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Metadatos en Grid pequeña dentro del Dashboard */
+        .meta-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .meta-item label {
+            display: block;
+            font-size: 0.75rem;
+            color: #888;
+            margin-bottom: 4px;
+        }
+
+        .meta-item div {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--dark);
+        }
+
+        /* Área de Gráficos */
+        .chart-container {
+            background: #fff;
+            border-radius: 15px;
+            padding: 20px;
+            height: 220px;
+            position: relative;
+            border: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .kpi-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .big-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .big-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-align: right;
+        }
+
+        /* --- FINAL SLIDE --- */
+        .final-content {
+            text-align: center;
+            max-width: 700px;
+        }
+
+        .quote {
+            font-size: 2rem;
+            font-style: italic;
+            color: var(--dark);
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        .quote span {
+            color: var(--secondary);
+            font-size: 3rem;
+            vertical-align: middle;
+        }
+
+        /* --- NAVEGACIÓN --- */
+        .nav-controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            background: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark);
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .nav-dots {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dot.active {
+            background: var(--primary);
+            height: 25px;
+            border-radius: 10px;
+        }
+
+        /* --- TOC OVERLAY --- */
+        .toc-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.98);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .toc-overlay.open {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .toc-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .toc-item:hover {
+            color: var(--primary);
+            padding-left: 10px;
+        }
+
+        .toc-item span {
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .close-toc {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        /* --- Mobile Rotate Overlay --- */
+        #rotate-device {
+            display: none;
+            /* Oculto por defecto */
+            position: fixed;
+            inset: 0;
+            /* Ocupa toda la pantalla */
+            z-index: 10000;
+            background: rgba(18, 32, 43, 0.95);
+            /* Fondo oscuro corporativo */
+            backdrop-filter: blur(10px);
+            /* Efecto vidrio esmerilado */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        #rotate-device svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 25px;
+            fill: white;
+            /* Icono blanco para contraste */
+            /* Sombra resplandeciente con el azul corporativo */
+            filter: drop-shadow(0 0 10px var(--primary));
+            animation: rotate-phone 3s infinite ease-in-out;
+        }
+
+        #rotate-device h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        #rotate-device p {
+            font-size: 1rem;
+            color: #a0aec0;
+            /* Texto gris suave */
+            max-width: 300px;
+            line-height: 1.5;
+        }
+
+        /* Animación del icono: De vertical a horizontal */
+        @keyframes rotate-phone {
+
+            0%,
+            10% {
+                transform: rotate(0deg);
+                opacity: 1;
+            }
+
+            40%,
+            60% {
+                transform: rotate(-90deg);
+                opacity: 1;
+            }
+
+            90%,
+            100% {
+                transform: rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 1024px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                padding-bottom: 80px;
+            }
+
+            section {
+                height: auto;
+                min-height: 100vh;
+                display: block;
+                padding-top: 100px;
+            }
+
+            .dashboard-card {
+                margin-top: 20px;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            h2 {
+                font-size: 1.8rem;
+            }
+
+            .nav-dots {
+                display: none;
+            }
+        }
+
+        /* Mostrar SOLO en móviles/tablets (max-width 900px) que estén en VERTICAL (portrait) */
+        @media (max-width: 900px) and (orientation: portrait) {
+            #rotate-device {
+                display: flex;
+                opacity: 1;
+            }
+
+            /* Bloquear el scroll del contenido de fondo cuando el overlay está activo */
+            body {
+                overflow: hidden;
+            }
+        }
+
+        /* Ajustes menores para la UI general en móvil */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 1rem;
+            }
+
+            header {
+                padding: 15px;
+            }
+
+            .nav-dots {
+                display: none;
+            }
+    </style>
+</head>
+
+<body>
+
+    <div id="rotate-device">
+        <svg viewBox="0 0 24 24">
+            <path
+                d="M17,1H7C5.9,1,5,1.9,5,3v18c0,1.1,0.9,2,2,2h10c1.1,0,2-0.9,2-2V3C19,1.9,18.1,1,17,1z M17,19H7V5h10V19z" />
+        </svg>
+        <h3>Gira tu dispositivo</h3>
+        <p>La estrategia se ve mejor en pantalla completa. Por favor, usa el modo horizontal.</p>
+    </div>
+
+    <div class="ambient-bg"></div>
+
+    <header>
+        <div class="brand-logo">Gerencia <span>Planeación</span> 2026</div>
+        <button class="btn-menu" onclick="toggleTOC()">Índice</button>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+    </header>
+
+    <div class="toc-overlay" id="tocOverlay">
+        <div class="close-toc" onclick="toggleTOC()">×</div>
+        <ul class="toc-list" id="tocList">
+        </ul>
+    </div>
+
+    <main id="mainContainer">
+        <section class="active" id="section-0">
+            <div class="cover-content">
+                <span style="font-size: 4rem; display: block; margin-bottom: 20px;">🚀</span>
+                <h1>Objetivos Estratégicos 2026</h1>
+                <p class="subtitle">Presentación Ejecutiva Interactiva<br>Gerencia de Planeación y Contratación</p>
+                <button class="btn-start" onclick="scrollToIndex(1)">Iniciar Presentación</button>
+            </div>
+        </section>
+
+    </main>
+
+    <div class="nav-controls">
+        <button class="nav-btn" onclick="prevSlide()">❮</button>
+        <button class="nav-btn" onclick="nextSlide()">❯</button>
+    </div>
+    <div class="nav-dots" id="dotsContainer"></div>
+
+    <script>
+        // --- DATOS ---
+        const objectives = [
+            {
+                id: 1,
+                badge: "Crecimiento",
+                title: "Metodología Nacional de Expansión",
+                iniciativa: "Metodología nacional de evaluación y viabilidad de nuevas sedes",
+                objetivo: "Estandarizar el análisis de expansión incorporando variables de oferta, demanda, riesgo financiero y oportunidad territorial.",
+                indicador: "Metodología única aplicada al 100% de propuestas.",
+                linea: "No existe metodología estandarizada.",
+                meta: "Diseñada, aprobada y aplicada nacionalmente.",
+                actividades: ["Definir criterios técnicos y financieros.", "Diseñar matriz de priorización territorial.", "Integrar data poblacional.", "Crear manual operativo.", "Socializar con Regionales."],
+                responsable: "Gerencia Planeación",
+                trimestre: "Q1 – Q3",
+                dependencias: "Finanzas, Operaciones",
+                chartType: "bar",
+                kpiValue: 100,
+                kpiLabel: "% Cobertura"
+            },
+            {
+                id: 2,
+                badge: "Crecimiento",
+                title: "Sistema de Priorización de Mercados",
+                iniciativa: "Sistema nacional de priorización basado en analítica",
+                objetivo: "Identificar y calificar mercados potenciales mediante un modelo de puntuación multicriterio.",
+                indicador: "Ranking nacional actualizado trimestralmente.",
+                linea: "Análisis puntuales sin ranking.",
+                meta: "Ranking automatizado y operativo.",
+                actividades: ["Definir variables (demanda, competencia).", "Desarrollar puntuador por municipio.", "Integrar MiPres y ocupación.", "Tablero de priorización trimestral."],
+                responsable: "Planeación / Analítica",
+                trimestre: "Q1 – Q4",
+                dependencias: "Tecnología, Comercial",
+                chartType: "pie",
+                kpiValue: 4,
+                kpiLabel: "Updates / Año"
+            },
+            {
+                id: 3,
+                badge: "Innovación",
+                title: "Modelo Predictivo de Demanda",
+                iniciativa: "Modelos predictivos por servicio y EPS",
+                objetivo: "Predecir demanda futura para soportar decisiones de expansión.",
+                indicador: "Modelo implementado con actualizaciones Qtr.",
+                linea: "Proyecciones manuales.",
+                meta: "Modelo en 100% de EPS priorizadas.",
+                actividades: ["Definir variables epidemiológicas.", "Construir modelo nacional.", "Integrar en dashboard expansión.", "Validar con datos reales."],
+                responsable: "Planeación",
+                trimestre: "Q2 – Q4",
+                dependencias: "Tecnología – Analítica",
+                chartType: "line",
+                kpiValue: 95,
+                kpiLabel: "% Precisión Est."
+            },
+            {
+                id: 4,
+                badge: "Operaciones",
+                title: "Modelo de Madurez Sedes Nuevas",
+                iniciativa: "Seguimiento de ramp-up nuevas sedes",
+                objetivo: "Evaluar desempeño (Ramp-up) en el primer año para asegurar rentabilidad.",
+                indicador: "Modelo aplicado al 100% de sedes nuevas.",
+                linea: "Sin medición estructurada.",
+                meta: "Índice reportado trimestralmente.",
+                actividades: ["Definir KPIs (Ocupación, EBITDA).", "Diseñar tablero de madurez.", "Seguimiento trimestral.", "Alertas de intervención."],
+                responsable: "Planeación",
+                trimestre: "Q1 – Q4",
+                dependencias: "Operaciones, Finanzas",
+                chartType: "bar",
+                kpiValue: 100,
+                kpiLabel: "% Sedes"
+            },
+            {
+                id: 5,
+                badge: "Finanzas",
+                title: "Alertas Automáticas Presupuestales",
+                iniciativa: "Sistema automatizado de alertas",
+                objetivo: "Detectar desviaciones entre proyección y ejecución en tiempo real.",
+                indicador: "95% desviaciones detectadas < 15 días.",
+                linea: "Seguimiento manual.",
+                meta: "Sistema operativo nacional.",
+                actividades: ["Definir umbrales.", "Integrar datos MiPres/Juntas.", "Desarrollar motor de alertas.", "Piloto y escalamiento."],
+                responsable: "Planeación",
+                trimestre: "Q1 – Q2",
+                dependencias: "Analítica, Finanzas",
+                chartType: "pie",
+                kpiValue: 15,
+                kpiLabel: "Días Máx."
+            },
+            {
+                id: 6,
+                badge: "Eficiencia",
+                title: "Optimización de Ocupación",
+                iniciativa: "Optimización de capacidad instalada",
+                objetivo: "Elevar eficiencia redistribuyendo oferta según demanda real.",
+                indicador: "Dashboard mensual con recomendaciones.",
+                linea: "Dashboard sin predictivo.",
+                meta: "Herramienta robusta operativa.",
+                actividades: ["Modelo con variables predictivas.", "Identificar sobrecapacidad.", "Ajustes mensuales agenda.", "Validar con regiones."],
+                responsable: "Planeación",
+                trimestre: "Q1 – Q3",
+                dependencias: "Operaciones, TH",
+                chartType: "line",
+                kpiValue: 12,
+                kpiLabel: "Informes/Año"
+            },
+            {
+                id: 7,
+                badge: "Finanzas",
+                title: "Módulo Nacional de Costos",
+                iniciativa: "Costos por servicio estandarizados",
+                objetivo: "Consolidar información de costos para pricing y negociación.",
+                indicador: "100% servicios con costo estándar.",
+                linea: "Costeo disperso.",
+                meta: "Módulo centralizado operativo.",
+                actividades: ["Consolidar insumos fijos/variables.", "Estructura nacional de costos.", "Integrar a dashboards.", "Socializar resultados."],
+                responsable: "Planeación",
+                trimestre: "Q2 – Q4",
+                dependencias: "Finanzas, Tecnología",
+                chartType: "bar",
+                kpiValue: 100,
+                kpiLabel: "% Servicios"
+            },
+            {
+                id: 8,
+                badge: "Tecnología",
+                title: "Ecosistema Integrado",
+                iniciativa: "Plataforma única de planeación",
+                objetivo: "Unificar dashboards y bases de datos en un solo entorno.",
+                indicador: "Integración 4 herramientas en 1.",
+                linea: "Herramientas aisladas.",
+                meta: "Plataforma operativa nacional.",
+                actividades: ["Levantar requerimientos.", "Unificar datos maestros.", "Diseñar interfaz única.", "Pruebas piloto.", "Manual unificado."],
+                responsable: "Gerencia Planeación",
+                trimestre: "Q2 – Q4",
+                dependencias: "Tecnología, Calidad",
+                chartType: "pie",
+                kpiValue: 1,
+                kpiLabel: "Plataforma"
+            }
+        ];
+
+        // --- RENDERIZADO DE CONTENIDO ---
+        const main = document.getElementById('mainContainer');
+        const tocList = document.getElementById('tocList');
+        const dotsContainer = document.getElementById('dotsContainer');
+
+        // Generar TOC y Dots para Cover (index 0)
+        generateNavElement(0, "Inicio");
+
+        objectives.forEach((obj, index) => {
+            const realIndex = index + 1; // +1 porque el 0 es la portada
+
+            // Crear Sección HTML
+            const section = document.createElement('section');
+            section.id = `section-${realIndex}`;
+            section.innerHTML = `
+                <div class="grid-container">
+                    <div class="content-card">
+                        <span class="badge">${obj.badge}</span>
+                        <h2>${obj.id}. ${obj.title}</h2>
+                        <div class="iniciativa">${obj.iniciativa}</div>
+                        
+                        <div class="details-box">
+                            <h4>Objetivo Estratégico</h4>
+                            <p>${obj.objetivo}</p>
+                            
+                            <h4>Actividades Clave 2026</h4>
+                            <ul class="activities-list">
+                                ${obj.actividades.map(act => `<li>${act}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="meta-grid">
+                            <div class="meta-item"><label>Responsable</label><div>${obj.responsable}</div></div>
+                            <div class="meta-item"><label>Trimestre</label><div>${obj.trimestre}</div></div>
+                            <div class="meta-item"><label>Meta 2026</label><div>${obj.meta}</div></div>
+                            <div class="meta-item"><label>Línea Base</label><div>${obj.linea}</div></div>
+                        </div>
+
+                        <div class="chart-container">
+                            <canvas id="chart-${realIndex}"></canvas>
+                        </div>
+                        
+                        <div class="kpi-row">
+                            <div>
+                                <label style="font-size:0.8rem; color:#888;">Indicador Clave</label>
+                                <div style="font-size:0.9rem; font-weight:600;">${obj.indicador}</div>
+                            </div>
+                            <div>
+                                <div class="big-number count-up" data-target="${obj.kpiValue}">0</div>
+                                <div class="big-label">${obj.kpiLabel}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            main.appendChild(section);
+            generateNavElement(realIndex, `${obj.id}. ${obj.title}`);
+        });
+
+        // Generar Sección Final (Agradecimiento)
+        const finalIndex = objectives.length + 1;
+        const finalSection = document.createElement('section');
+        finalSection.id = `section-${finalIndex}`;
+        finalSection.innerHTML = `
+            <div class="final-content">
+                <div class="quote"><span>"</span>La planeación no es solo pensar en el futuro,<br> es el futuro que construimos hoy.<span>"</span></div>
+                <h2 style="color:var(--primary)">Gracias</h2>
+                <p style="color:var(--text-muted)">Gerencia de Planeación y Contratación 2026</p>
+                <button class="btn-menu" onclick="scrollToIndex(0)" style="margin-top:20px;">Volver al Inicio</button>
+            </div>
+        `;
+        main.appendChild(finalSection);
+        generateNavElement(finalIndex, "Cierre");
+
+
+        function generateNavElement(index, title) {
+            // TOC
+            const li = document.createElement('li');
+            li.className = 'toc-item';
+            li.innerHTML = `${title} <span>Go</span>`;
+            li.onclick = () => { scrollToIndex(index); toggleTOC(); };
+            tocList.appendChild(li);
+
+            // Dot
+            const dot = document.createElement('div');
+            dot.className = `dot ${index === 0 ? 'active' : ''}`;
+            dot.onclick = () => scrollToIndex(index);
+            dotsContainer.appendChild(dot);
+        }
+
+        // --- LÓGICA DE NAVEGACIÓN Y OBSERVADORES ---
+        const sections = document.querySelectorAll('section');
+        const progressBar = document.getElementById('progressBar');
+        const dots = document.querySelectorAll('.dot');
+        let currentIndex = 0;
+
+        const observerOptions = { root: main, threshold: 0.5 };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.id;
+                    const index = parseInt(id.split('-')[1]);
+                    currentIndex = index;
+                    updateUI(index);
+                    entry.target.classList.add('active');
+
+                    // Trigger animations if it's an objective slide
+                    if (index > 0 && index <= objectives.length) {
+                        animateSection(index);
+                    }
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(sec => observer.observe(sec));
+
+        function updateUI(index) {
+            // Dots
+            dots.forEach(d => d.classList.remove('active'));
+            if (dots[index]) dots[index].classList.add('active');
+
+            // Progress Bar
+            const percent = (index / (sections.length - 1)) * 100;
+            progressBar.style.width = `${percent}%`;
+        }
+
+        function scrollToIndex(index) {
+            const target = document.getElementById(`section-${index}`);
+            if (target) {
+                // Scroll interno del main
+                target.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function nextSlide() { if (currentIndex < sections.length - 1) scrollToIndex(currentIndex + 1); }
+        function prevSlide() { if (currentIndex > 0) scrollToIndex(currentIndex - 1); }
+
+        function toggleTOC() {
+            document.getElementById('tocOverlay').classList.toggle('open');
+        }
+
+        // --- MOTOR DE GRÁFICOS Y ANIMACIONES ---
+        function animateSection(index) {
+            const section = document.getElementById(`section-${index}`);
+            const objData = objectives[index - 1];
+
+            // 1. Count Up Animation
+            const counter = section.querySelector('.count-up');
+            if (counter && !counter.classList.contains('animated')) {
+                counter.classList.add('animated');
+                animateValue(counter, 0, objData.kpiValue, 1500);
+            }
+
+            // 2. Chart Drawing
+            const canvas = section.querySelector('canvas');
+            if (canvas && !canvas.classList.contains('drawn')) {
+                canvas.classList.add('drawn');
+                drawChart(canvas, objData.chartType);
+            }
+        }
+
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start);
+                if (progress < 1) window.requestAnimationFrame(step);
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        function drawChart(canvas, type) {
+            const ctx = canvas.getContext('2d');
+            // Retina fix
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.scale(dpr, dpr);
+            const w = rect.width;
+            const h = rect.height;
+
+            ctx.clearRect(0, 0, w, h);
+
+            const primary = '#00A9E0';
+            const secondary = '#8DC63F';
+
+            if (type === 'bar') {
+                // Gráfico de barras comparativo (Base vs Meta)
+                const barW = 40;
+                const maxH = h - 40;
+
+                // Fondo
+                ctx.fillStyle = '#f0f0f0';
+                ctx.fillRect(w / 2 - 60, h - (maxH * 0.3), barW, maxH * 0.3); // Base dummy 30%
+
+                // Meta Animada
+                let currH = 0;
+                const targetH = maxH * 0.9;
+                const anim = () => {
+                    currH += targetH / 40;
+                    if (currH > targetH) currH = targetH;
+
+                    ctx.clearRect(w / 2 + 20, 0, barW, h); // clear slot
+
+                    // Bar
+                    const grd = ctx.createLinearGradient(0, h, 0, h - currH);
+                    grd.addColorStop(0, primary);
+                    grd.addColorStop(1, '#56CCF2');
+                    ctx.fillStyle = grd;
+
+                    // Rounded top logic simplified
+                    ctx.fillRect(w / 2 + 20, h - currH - 20, barW, currH);
+
+                    // Labels
+                    ctx.fillStyle = '#666';
+                    ctx.font = '12px Inter';
+                    ctx.textAlign = 'center';
+                    ctx.fillText("Base", w / 2 - 40, h - 5);
+                    ctx.fillText("Meta", w / 2 + 40, h - 5);
+
+                    if (currH < targetH) requestAnimationFrame(anim);
+                };
+                anim();
+
+            } else if (type === 'pie') {
+                // Gráfico de Dona
+                const cx = w / 2, cy = h / 2;
+                const radius = Math.min(cx, cy) - 20;
+
+                // Track
+                ctx.beginPath();
+                ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+                ctx.strokeStyle = '#f0f0f0';
+                ctx.lineWidth = 15;
+                ctx.stroke();
+
+                // Fill
+                let angle = -Math.PI / 2;
+                const targetAngle = (Math.PI * 2 * 0.75) - (Math.PI / 2); // 75% dummy
+                const anim = () => {
+                    angle += 0.05;
+                    if (angle > targetAngle) angle = targetAngle;
+
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, radius, -Math.PI / 2, angle);
+                    ctx.strokeStyle = secondary;
+                    ctx.lineWidth = 15;
+                    ctx.lineCap = 'round';
+                    ctx.stroke();
+
+                    if (angle < targetAngle) requestAnimationFrame(anim);
+                };
+                anim();
+
+                // Text Center
+                ctx.fillStyle = primary;
+                ctx.font = 'bold 20px Inter';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText("Q4", cx, cy);
+
+            } else if (type === 'line') {
+                // Gráfico de Línea (Tendencia)
+                const points = [h - 20, h - 50, h - 40, h - 90, h - 80, h - 140];
+                const step = w / (points.length - 1);
+
+                let progress = 0;
+                const anim = () => {
+                    progress += 1;
+                    if (progress > points.length * 10) progress = points.length * 10;
+
+                    ctx.clearRect(0, 0, w, h);
+
+                    // Grid lines
+                    ctx.strokeStyle = '#f5f5f5';
+                    ctx.lineWidth = 1;
+                    ctx.beginPath(); ctx.moveTo(0, h - 20); ctx.lineTo(w, h - 20); ctx.stroke();
+
+                    // Chart Line
+                    ctx.beginPath();
+                    ctx.moveTo(0, points[0]);
+
+                    const maxP = Math.min(progress / 10, points.length);
+                    for (let i = 1; i < maxP; i++) {
+                        // Smooth curve
+                        const xc = ((i - 1) * step + i * step) / 2;
+                        const yc = (points[i - 1] + points[i]) / 2;
+                        ctx.quadraticCurveTo((i - 1) * step, points[i - 1], xc, yc);
+                        if (i === Math.floor(maxP)) ctx.lineTo(i * step, points[i]); // connect last bit
+                    }
+
+                    ctx.strokeStyle = primary;
+                    ctx.lineWidth = 3;
+                    ctx.stroke();
+
+                    // Area fill
+                    ctx.lineTo((maxP - 1) * step, h);
+                    ctx.lineTo(0, h);
+                    ctx.fillStyle = "rgba(0, 169, 224, 0.1)";
+                    ctx.fill();
+
+                    if (progress < points.length * 10) requestAnimationFrame(anim);
+                };
+                anim();
+            }
+        }
+
+        // --- TECLADO ---
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextSlide();
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevSlide();
+        });
+
+        // Init
+        window.onload = () => {
+            // Check orientation
+            if (window.innerWidth < 768 && window.innerHeight > window.innerWidth) {
+                // document.getElementById('rotate-device').style.display = 'flex';
+            }
+        };
+    </script>
+</body>
+
+</html>
